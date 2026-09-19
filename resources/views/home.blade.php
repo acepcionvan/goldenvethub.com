@@ -24,12 +24,13 @@
                 >
             </a>
 
-            <nav class="gvh-nav" aria-label="Primary navigation">
+            <nav id="primary-navigation" class="gvh-nav" aria-label="Primary navigation">
                 <a class="active" href="{{ route('home') }}">Home</a>
                 <a href="#veterinary-care">Veterinary Care</a>
                 <a href="#pet-store">Pet Store</a>
                 <a href="#about-us">About Us</a>
                 <a href="#contact">Contact</a>
+                <a class="gvh-mobile-book" href="#book-appointment">Book Appointment</a>
             </nav>
 
             <div class="gvh-actions">
@@ -40,6 +41,11 @@
                     <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 8.5H8L6 3H3m6 18a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>
                     <span>0</span>
                 </a>
+                <button class="gvh-menu-toggle" type="button" aria-label="Open menu" aria-controls="primary-navigation" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <a class="gvh-book" href="#book-appointment">
                     <svg viewBox="0 0 24 24"><path d="M8 2v4m8-4v4M4 9h16M6 4h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
                     Book Appointment
@@ -332,6 +338,31 @@
             <p>&copy; 2026-2027 GoldenVetHub. All Rights Reserved.</p>
         </footer>
         <script>
+            const menuToggle = document.querySelector('.gvh-menu-toggle');
+            const primaryNavigation = document.querySelector('#primary-navigation');
+
+            if (menuToggle && primaryNavigation) {
+                menuToggle.addEventListener('click', () => {
+                    const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+                    menuToggle.setAttribute('aria-expanded', String(! isOpen));
+                    document.body.classList.toggle('gvh-menu-open', ! isOpen);
+                });
+
+                primaryNavigation.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        document.body.classList.remove('gvh-menu-open');
+                    });
+                });
+
+                window.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                        document.body.classList.remove('gvh-menu-open');
+                    }
+                });
+            }
+
             document.querySelectorAll('.gvh-copy-address').forEach((button) => {
                 button.addEventListener('click', async () => {
                     const status = button.closest('.gvh-location-card')?.querySelector('.gvh-copy-status');

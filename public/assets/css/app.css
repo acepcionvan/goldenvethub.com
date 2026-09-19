@@ -29,6 +29,11 @@ body {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+img,
+iframe {
+  max-width: 100%;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -93,6 +98,11 @@ svg {
   padding: 8px 0;
 }
 
+.gvh-mobile-book,
+.gvh-menu-toggle {
+  display: none;
+}
+
 .gvh-nav a::after {
   position: absolute;
   left: 0;
@@ -137,6 +147,38 @@ svg {
   color: var(--green-dark);
   background: transparent;
   cursor: pointer;
+}
+
+.gvh-menu-toggle {
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  cursor: pointer;
+}
+
+.gvh-menu-toggle span {
+  width: 20px;
+  height: 2px;
+  display: block;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.gvh-menu-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.gvh-menu-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.gvh-menu-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 .gvh-icon-button:hover,
@@ -1264,25 +1306,22 @@ svg {
 
 @media (max-width: 1280px) {
   .gvh-header {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 10px 28px;
-  }
-
-  .gvh-brand,
-  .gvh-actions {
-    justify-content: center;
+    grid-template-columns: minmax(180px, 220px) 1fr auto;
+    gap: 14px;
+    padding: 8px 28px;
   }
 
   .gvh-brand img {
-    width: min(330px, 82vw);
-    margin: 0 auto;
+    width: min(100%, 210px);
   }
 
   .gvh-nav {
-    order: 3;
-    flex-wrap: wrap;
-    gap: 14px 28px;
+    gap: 18px;
+    font-size: 0.88rem;
+  }
+
+  .gvh-actions {
+    justify-content: flex-end;
   }
 
   .gvh-hero-grid {
@@ -1363,17 +1402,79 @@ svg {
 
 @media (max-width: 900px) {
   .gvh-header {
-    position: relative;
-    border-radius: 0 0 28px 28px;
+    position: sticky;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 8px 14px;
+    border-radius: 0 0 22px 22px;
+  }
+
+  .gvh-brand img {
+    width: min(224px, 58vw);
+    margin: 0;
+  }
+
+  .gvh-nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 14px;
+    right: 14px;
+    display: grid;
+    gap: 4px;
+    padding: 14px;
+    border: 1px solid rgba(0, 84, 47, 0.12);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 18px 42px rgba(0, 63, 40, 0.14);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    visibility: hidden;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  }
+
+  .gvh-menu-open .gvh-nav {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .gvh-nav a,
+  .gvh-mobile-book {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    border-radius: 10px;
+    white-space: normal;
+  }
+
+  .gvh-nav a:hover,
+  .gvh-nav .active {
+    background: var(--green-soft);
+  }
+
+  .gvh-nav a::after {
+    display: none;
+  }
+
+  .gvh-mobile-book {
+    color: #fff;
+    background: linear-gradient(135deg, #0b743e, var(--green));
   }
 
   .gvh-actions {
-    flex-wrap: wrap;
+    gap: 6px;
   }
 
   .gvh-book {
-    min-height: 50px;
-    padding: 0 18px;
+    display: none;
+  }
+
+  .gvh-menu-toggle {
+    display: grid;
   }
 
   .gvh-hero {
@@ -1388,8 +1489,8 @@ svg {
   .gvh-hero-grid {
     grid-template-columns: 1fr;
     min-height: auto;
-    width: min(720px, calc(100% - 32px));
-    padding: 48px 0 54px;
+    width: min(720px, calc(100% - 28px));
+    padding: 42px 0 46px;
   }
 
   .gvh-hero-copy {
@@ -1404,6 +1505,11 @@ svg {
 
   .gvh-cta-row {
     justify-content: center;
+  }
+
+  .gvh-primary-cta,
+  .gvh-secondary-cta {
+    min-height: 58px;
   }
 
   .gvh-benefits {
@@ -1430,7 +1536,7 @@ svg {
   }
 
   .gvh-services-section {
-    padding: 48px 18px;
+    padding: 46px 18px;
   }
 
   .gvh-service-grid {
@@ -1445,6 +1551,13 @@ svg {
   .gvh-trust-list {
     grid-template-columns: 1fr;
     padding-right: 0;
+  }
+
+  .gvh-trust-list article {
+    padding: 14px;
+    border: 1px solid rgba(0, 84, 47, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.62);
   }
 
   .gvh-trust-panel h2 {
@@ -1467,6 +1580,7 @@ svg {
   }
 
   .gvh-appointment-panel {
+    gap: 24px;
     padding: 24px 18px;
   }
 
@@ -1481,6 +1595,13 @@ svg {
 
   .gvh-form-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .gvh-form-grid input,
+  .gvh-form-grid select {
+    min-height: 52px;
+    font-size: 1rem;
   }
 
   .gvh-form-note,
@@ -1493,8 +1614,15 @@ svg {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .gvh-process-steps article {
+    padding: 18px 14px;
+    border: 1px solid rgba(0, 84, 47, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.58);
+  }
+
   .gvh-testimonials article {
-    grid-template-columns: minmax(0, 1fr) minmax(126px, 32%);
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 34%);
   }
 
   .gvh-testimonials img {
@@ -1512,7 +1640,7 @@ svg {
   }
 
   .gvh-map-card {
-    min-height: 390px;
+    min-height: 360px;
   }
 
   .gvh-location-card {
@@ -1522,45 +1650,56 @@ svg {
 
 @media (max-width: 560px) {
   .gvh-header {
-    padding: 10px 18px;
+    padding: 8px 12px;
   }
 
   .gvh-brand img {
-    width: min(280px, 88vw);
+    width: min(190px, 52vw);
+  }
+
+  .gvh-icon-button,
+  .gvh-cart,
+  .gvh-menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+
+  .gvh-cart span {
+    width: 19px;
+    height: 19px;
+    font-size: 0.68rem;
   }
 
   .gvh-nav {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
-    text-align: center;
-  }
-
-  .gvh-actions {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    width: 100%;
-  }
-
-  .gvh-book {
-    width: 100%;
+    left: 10px;
+    right: 10px;
   }
 
   .gvh-hero-grid {
-    padding-top: 38px;
+    width: min(calc(100% - 24px), 520px);
+    padding: 34px 0 38px;
   }
 
   .gvh-hero h1 {
-    font-size: clamp(2.35rem, 12vw, 3.5rem);
+    font-size: clamp(2.25rem, 11vw, 3.2rem);
+    line-height: 1.02;
+  }
+
+  .gvh-lede {
+    font-size: 1rem;
+    line-height: 1.45;
   }
 
   .gvh-primary-cta,
   .gvh-secondary-cta {
     width: 100%;
+    min-height: 56px;
+    padding: 0 18px;
   }
 
   .gvh-benefits {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 10px;
   }
 
   .gvh-benefits span {
@@ -1572,16 +1711,30 @@ svg {
     display: none;
   }
 
+  .gvh-hero-visual {
+    min-height: 0;
+    margin-top: 0;
+  }
+
   .gvh-service-grid {
     grid-template-columns: 1fr;
   }
 
   .gvh-section-intro h2 {
-    font-size: clamp(2.2rem, 12vw, 3.3rem);
+    font-size: clamp(2.1rem, 11vw, 3rem);
+    line-height: 1.03;
+  }
+
+  .gvh-section-eyebrow {
+    max-width: 100%;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-align: center;
   }
 
   .gvh-trust-list article {
-    grid-template-columns: 70px 1fr;
+    grid-template-columns: 62px 1fr;
+    gap: 12px;
   }
 
   .gvh-trust-list span {
@@ -1598,8 +1751,20 @@ svg {
     min-height: 0;
   }
 
+  .gvh-appointment-section {
+    padding: 36px 14px;
+  }
+
+  .gvh-appointment-panel {
+    padding: 16px 12px;
+  }
+
+  .gvh-appointment-form {
+    padding: 18px 14px;
+  }
+
   .gvh-appointment-copy h2 {
-    font-size: clamp(2.3rem, 11vw, 3.4rem);
+    font-size: clamp(2.05rem, 10.5vw, 3rem);
   }
 
   .gvh-appointment-copy > p {
@@ -1609,6 +1774,7 @@ svg {
   .gvh-submit-appointment {
     min-height: 58px;
     font-size: 1rem;
+    padding: 0 14px;
   }
 
   .gvh-process-steps {
@@ -1632,7 +1798,7 @@ svg {
   }
 
   .gvh-map-card {
-    min-height: 340px;
+    min-height: 320px;
   }
 
   .gvh-location-card {
